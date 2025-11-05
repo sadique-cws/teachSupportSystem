@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+{% load static %}
+
+<!-- banner -->
+<div class="bg-rose-100 py-20 px-[10%] flex flex-col lg:flex-row lg:items-center lg:justify-between">
+    <div>
+        <h4 class="text-gray-800 mb-2 text-2xl font-bold capitalize text-rose-600">Hi, 
+            {% if request.user.is_authenticated %} {{ request.user.username }}! {% else %} Guest!{% endif %}
+        </h4>
+        <h2 class="text-4xl font-bold mb-4">Welcome to TechSupport</h2>
+        <p class="text-lg mb-6">Your one-stop solution for all your technical support needs. We provide expert assistance for hardware, software, and network issues.</p>
+        <a href="" class="bg-rose-600 text-white px-6 py-3 rounded hover:bg-rose-700">Get Started</a>
+    </div>
+    <div class="mt-8 lg:mt-0">
+        <img src="{% static 'banner.png' %}" alt="Tech Support">
+    </div>
+</div>
+
+{% endblock %}
