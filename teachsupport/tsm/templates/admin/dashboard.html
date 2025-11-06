@@ -1,0 +1,100 @@
+{% extends "admin/adminbase.html" %}
+
+
+{% block content %}
+
+<div class="flex flex-1">
+    <div class="w-2/12 bg-slate-700 h-screen pt-5">
+        <div class="flex flex-col">
+            <a href="" class="w-full px-5 py-3 hover:bg-slate-800 transition text-white font-bold text-xl">Dashboard</a>
+            <a href="" class="w-full px-5 py-3 hover:bg-slate-800 transition text-white font-bold text-xl">Users</a>
+            <a href="" class="w-full px-5 py-3 hover:bg-slate-800 transition text-white font-bold text-xl">Manage
+                Tickets</a>
+            <a href="" class="w-full px-5 py-3 hover:bg-slate-800 transition text-white font-bold text-xl">Agents</a>
+            <a href="" class="w-full px-5 py-3 hover:bg-slate-800 transition text-white font-bold text-xl">Reports</a>
+            <a href="" class="w-full px-5 py-3 hover:bg-slate-800 transition text-white font-bold text-xl">Settings</a>
+
+        </div>
+    </div>
+    <div class="w-10/12">
+        <div class="mt-10 ml-10">
+            <p class="text-lg">Welcome to the Admin Dashboard. Here you can manage users, view reports, and configure
+                system settings.</p>
+
+            <div class="grid grid-cols-5">
+                <div class="bg-blue-500 text-white p-5 m-5 rounded-lg  flex-1">
+                    <h2 class="text-2xl font-bold">Total Ticket</h2>
+                    <p class="text-3xl mt-2">{{count.tickets}}</p>
+                </div>
+                <div class="bg-rose-500 text-white p-5 m-5 rounded-lg  flex-1">
+                    <h2 class="text-2xl font-bold">Total User</h2>
+                    <p class="text-3xl mt-2">{{count.users}}</p>
+                </div>
+
+                <div class="bg-amber-500 text-white p-5 m-5 rounded-lg  flex-1">
+                    <h2 class="text-2xl font-bold">Total Replay</h2>
+                    <p class="text-3xl mt-2">{{count.replay}}</p>
+                </div>
+
+                <div class="bg-stone-500 text-white p-5 m-5 rounded-lg  flex-1">
+                    <h2 class="text-2xl font-bold">Total Agent</h2>
+                    <p class="text-3xl mt-2">{{count.agents}}</p>
+                </div>
+
+                <div class="bg-green-500 text-white p-5 m-5 rounded-lg  flex-1">
+                    <h2 class="text-2xl font-bold">Total Reslove</h2>
+                    <p class="text-3xl mt-2">{{count.resloved_tickets}}</p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2">
+            <div class="flex-1">
+                <div class="bg-white p-5 m-5 rounded-lg ">
+                    <h2 class="text-2xl font-bold mb-5">Recent Activities</h2>
+                    <ul class="list-disc list-inside">
+                        <li>User JohnDoe created a new ticket.</li>
+                        <li>Agent JaneSmith resolved ticket #1234.</li>
+                        <li>New user MikeBrown registered.</li>
+                        <li>Report for last month generated.</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- recent open ticket -->
+             <div class="flex-1">
+                <div class="bg-white p-5 m-5 rounded-lg ">
+                    <h2 class="text-2xl font-bold mb-5">Recent Open Tickets</h2>
+                    <table class="min-w-full bg-white">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b">Ticket ID</th>
+                                <th class="py-2 px-4 border-b">Subject</th>
+                                <th class="py-2 px-4 border-b">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2 px-4 border-b">#1234</td>
+                                <td class="py-2 px-4 border-b">Issue with login</td>
+                                <td class="py-2 px-4 border-b">Open</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">#1235</td>
+                                <td class="py-2 px-4 border-b">Error on dashboard</td>
+                                <td class="py-2 px-4 border-b">Open</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">#1236</td>
+                                <td class="py-2 px-4 border-b">Payment not processed</td>
+                                <td class="py-2 px-4 border-b">Open</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
