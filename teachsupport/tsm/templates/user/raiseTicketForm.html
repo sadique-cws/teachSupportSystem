@@ -1,0 +1,30 @@
+{% extends "user/userbase.html" %}
+
+
+{% block content %}
+
+
+    <div class="px-[10%] py-6">
+        <h2 class="text-3xl font-semibold mb-6">Raise a New Support Ticket</h2>
+
+        <form action="" method="POST" class="bg-white p-6 rounded-lg shadow-md space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="title" class="block text-gray-700 font-semibold mb-2">Title</label>
+                <input type="text" id="title" name="title" required class="w-full border border-gray-300 p-2 rounded">
+            </div>
+
+            <div>
+                <label for="description" class="block text-gray-700 font-semibold mb-2">Description</label>
+                <textarea id="description" name="description" rows="5" required class="w-full border border-gray-300 p-2 rounded"></textarea>
+            </div>
+
+            
+            <div>
+                <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">Submit Ticket</button>
+            </div>
+        </form>
+    </div>
+
+
+{% endblock content %}

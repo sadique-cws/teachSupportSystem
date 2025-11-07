@@ -13,10 +13,16 @@ def dashbaord(request):
     return render(request, 'admin/dashboard.html',{'count':count})
 
 def manage_users(request):
-    return render(request, 'admin/manageUsers.html')
+    data = {
+        "users" : User.objects.filter(is_superuser=False)
+    }
+    return render(request, 'admin/manageUsers.html',data)
 
 def manage_tickets(request):
-    return render(request, 'admin/manageTickets.html')
+    data = {
+        "tickets" : SupportTicket.objects.all()
+    }
+    return render(request, 'admin/manageTickets.html', data)
 
 def reports(request):
     return render(request, 'admin/report.html')
@@ -26,3 +32,9 @@ def adminSettings(request):
 
 def manageAgents(request):
     return render(request, 'admin/manageAgents.html')
+
+def closeTicket(request, ticket_id):
+    ticket = SupportTicket.objects.get(id=ticket_id)
+    ticket.status = 'Closed'
+    ticket.save()
+    return redirect('manage_tickets')

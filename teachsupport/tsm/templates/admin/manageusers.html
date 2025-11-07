@@ -1,0 +1,36 @@
+{% extends "admin/adminbase.html" %}
+
+
+{% block content %}
+
+<div class="flex flex-1">
+    <div class="w-2/12 bg-slate-700 h-screen pt-5">
+       @{% include "admin/sidebar.html" %}
+    </div>
+    <div class="w-10/12">
+        <div class="flex-1">
+        <div class="bg-white p-5 m-5 rounded-lg ">
+            <h2 class="text-2xl font-bold mb-5">Manage Users</h2>
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b">ID</th>
+                        <th class="py-2 px-4 border-b">Name</th>
+                        <th class="py-2 px-4 border-b">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td class="py-2 px-4 border-b">{{ user.id }}</td>
+                        <td class="py-2 px-4 border-b">{{ user.username }}</td>
+                        <td class="py-2 px-4 border-b">{{ user.email }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+ </div>
+
+{% endblock content %}
