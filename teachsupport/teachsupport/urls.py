@@ -26,6 +26,7 @@ urlpatterns = [
     # user urls
     path("user/dashboard/", userDashboard, name="user_dashboard"),
     path("user/raise_ticket/", raiseTicket, name="raise_ticket"),
+    path("user/view_ticket/<int:ticket_id>/", viewTicket, name="view_ticket"),
 
     # superadmin url
     path('superadmin/', admin.site.urls),

@@ -1,0 +1,47 @@
+{% extends "user/userbase.html" %}
+
+
+{% block content %}
+
+
+    <div class="px-[10%] py-6">
+        {#  go back button  #}
+        <a href="{% url 'user_dashboard' %}" class="bg-orange-600 text-white px-3 py-2 mb-5">Go Back</a>
+        <h2 class="text-3xl font-semibold mb-6 mt-10">Ticket Details - #{{ ticket.id }}</h2>
+
+        <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
+            <div>
+                <h3 class="text-xl font-semibold">Title:</h3>
+                <p class="text-gray-700">{{ ticket.title }}</p>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold">Description:</h3>
+                <p class="text-gray-700">{{ ticket.description }}</p>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold">Status:</h3>
+                <p class="text-gray-700">{{ ticket.status }}</p>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold">Created On:</h3>
+                <p class="text-gray-700">{{ ticket.created_on|date:"F j, Y, g:i a" }}</p>
+            </div>
+
+            {% if attachments %}
+            <div>
+                <h3 class="text-xl font-semibold">Attachments:</h3>
+                <ul class="list-disc list-inside text-gray-700">
+                    {% for attachment in attachments %}
+                    <li><a href="{{ attachment.file.url }}" target="_blank" class="text-blue-500 hover:underline">{{ attachment.file.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+{% endblock content %}
