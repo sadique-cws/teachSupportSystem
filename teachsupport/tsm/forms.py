@@ -1,8 +1,9 @@
 
 from django import forms
-from tsm.models import Ticket
+from tsm.models import TicketComment
 
-class RaiseTIcketForm(forms.ModelForm):
+
+class CommentTicketForm(forms.ModelForm):
     class Meta:
-        model = Ticket
-        fields = ['title', 'description']
+        model = TicketComment
+        fields = ["comment",]

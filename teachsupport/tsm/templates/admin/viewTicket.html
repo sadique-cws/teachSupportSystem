@@ -1,0 +1,75 @@
+{% extends "admin/adminbase.html" %}
+
+{% block content %}
+    {% load tailwind_filters %}
+    <div class="flex flex-1">
+        <div class="w-2/12 bg-slate-700 h-screen pt-5">
+       {% include "admin/sidebar.html" %}
+    </div>
+    <div class="w-10/12 bg-slate-100 p-5">
+        <h1 class="text-xl mb-4">view ticket Id <span class="text-4xl font-bold ">#T{{ticket.id}}</span></h1>
+        <div class="grid grid-cols-3">
+            <table class="table w-full border col-span-2">
+            <tr>
+                <th class="p-3 border">Subject</th>
+                <td class="p-3 border">{{ticket.title}}</td>
+            </tr>
+            <tr>
+                <th class="p-3 border">Message</th>
+                <td class="p-3 border">{{ticket.description}}</td>
+            </tr>
+            <tr>
+                <th class="p-3 border">Raised By</th>
+                <td class="p-3 border">{{ticket.created_by}}</td>
+            </tr>
+            <tr>
+                <th class="p-3 border">assigned To</th>
+                <td class="p-3 border">{{ticket.assigned_to}}</td>
+            </tr>
+            <tr>
+                <th class="p-3 border">Status</th>
+                <td class="p-3 border">{{ticket.status}}</td>
+            </tr>
+             <tr>
+                <th class="p-3 border">Creation Date</th>
+                <td class="p-3 border">{{ticket.created_at}}</td>
+            </tr>
+        </table>
+        </div>
+
+        <div class="flex flex-1 flex-col">
+            <h2 class="my-5 text-3xl text-gray-400">Ticket Response</h2>
+            <!-- all replays -->
+             {% if replies|length %}
+            <table class="w-full border">
+                {% for reply in replies %}
+                    <tr>
+                    <td class="p-3 border">
+                        <h5>Replay By: {{reply.author}}</h5>
+                        <small>Date: {{reply.created_at}}</small>
+                    </td>
+                    <td class="p-3 border">
+                        {{reply.comment}}
+                    </td>
+                </tr>
+                {% endfor %}
+             </table>
+             {% else %}
+                    <h1 class="text-3xl text-slate-300 mt-5">Be the first Replay Now</h1>
+                   
+             {% endif %}
+
+              {% if ticket.status != "Closed" %}
+                    <form action="" method="post" class="mt-4">
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        <div class="mb-3">
+                            <button type="submit" class="bg-teal-600 text-white px-3 py-2 rounded hover:bg-teal-700 self-end">Replay</button>
+                        </div>
+                    </form>
+                    {% endif %}
+        </div>
+    </div>
+    </div>
+
+{% endblock content %}

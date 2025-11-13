@@ -5,7 +5,7 @@
 
 <div class="flex flex-1">
     <div class="w-2/12 bg-slate-700 h-screen pt-5">
-       @{% include "admin/sidebar.html" %}
+       {% include "admin/sidebar.html" %}
     </div>
     <div class="w-10/12">
         <div class="flex-1">
@@ -32,7 +32,7 @@
                         <td class="py-2 px-4 border">{{ ticket.created_by }}</td>
                         <td class="py-2 px-4 border">{{ ticket.status }}</td>
                         <td class="py-2 px-4 border">
-                            <a href="#" class="text-blue-500 hover:underline">View</a>
+                            <a href="{% url 'adminViewTicket' ticket.id%}" class="text-blue-500 hover:underline">View</a>
                             <a href="#" class="text-green-500 hover:underline ml-2">Assign Agent</a>
                             {% if ticket.status != 'Closed'  %}
                             <a href="{% url 'close_ticket' ticket.id %}" class="text-red-500 hover:underline ml-2">Close</a>
