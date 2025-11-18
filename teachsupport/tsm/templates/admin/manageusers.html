@@ -22,9 +22,9 @@
                 <tbody>
                     {% for user in users %}
                     <tr>
-                        <td class="py-2 px-4 border-b">{{ user.id }}</td>
-                        <td class="py-2 px-4 border-b">{{ user.username }}</td>
-                        <td class="py-2 px-4 border-b">{{ user.email }}</td>
+                        <td class="py-2 px-4 border-b">{{ user.user.id }}</td>
+                        <td class="py-2 px-4 border-b">{{ user.user.username }}</td>
+                        <td class="py-2 px-4 border-b">{{ user.user.email }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

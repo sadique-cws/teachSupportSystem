@@ -5,6 +5,9 @@ class UserRole(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=200,choices=(("user","user"),("staff","staff"),("admin","admin")))
 
+    def __str__(self):
+        return self.user.username
+
 class SupportTicket(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()

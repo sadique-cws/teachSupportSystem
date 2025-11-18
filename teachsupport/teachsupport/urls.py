@@ -21,6 +21,7 @@ urlpatterns = [
     path("admin/reports/", reports, name="reports"),
     path("admin/settings/", adminSettings, name="settings"),
     path("admin/manage_agents/", manageAgents, name="manage_agents"),
+    path("admin/agent/add/", addAgent, name="admin.addAgent"),
     path("admin/close_ticket/<int:ticket_id>/", closeTicket, name="close_ticket"),
     path("admin/viewticket/<int:ticket_id>/", adminViewTicket, name="adminViewTicket"),
 

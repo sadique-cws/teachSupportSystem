@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from tsm.models import SupportTicket,TicketComment,UserRole
 from tsm.forms import CommentTicketForm
 
@@ -15,7 +16,7 @@ def dashbaord(request):
 
 def manage_users(request):
     data = {
-        "users" : User.objects.filter(is_superuser=False)
+        "users" : UserRole.objects.filter(role="user")
     }
     return render(request, 'admin/manageUsers.html',data)
 
@@ -31,8 +32,25 @@ def reports(request):
 def adminSettings(request):
     return render(request, 'admin/setting.html')
 
+
+
+def addAgent(req):
+    form = UserCreationForm(req.POST or None)
+    if req.method == "POST":
+        if form.is_valid():
+            data = form.save()
+            # assign user role 
+            loginUser = data
+            role = UserRole()
+            role.user = loginUser
+            role.role = "staff"
+            role.save()
+            return redirect('manage_agents')
+    return render(req, "admin/addAgent.html", {"form":form})
+
 def manageAgents(request):
-    return render(request, 'admin/manageAgents.html')
+    staffs = UserRole.objects.filter(role="staff")
+    return render(request, 'admin/manageAgents.html',{"agents":staffs})
 
 def adminViewTicket(req,ticket_id):
     ticket = SupportTicket.objects.get(pk=ticket_id)

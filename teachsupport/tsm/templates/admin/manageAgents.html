@@ -1,0 +1,41 @@
+{% extends "admin/adminbase.html" %}
+
+
+{% block content %}
+
+<div class="flex flex-1">
+    <div class="w-2/12 bg-slate-700 h-screen pt-5">
+       {% include "admin/sidebar.html" %}
+    </div>
+    <div class="w-10/12">
+        <div class="flex-1">
+        <div class="bg-white p-5 m-5 rounded-lg ">
+            <div class="flex flex-1 justify-between items-center">
+                <h2 class="text-2xl font-bold mb-5">Manage Agents</h2>
+                <a href="{% url 'admin.addAgent' %}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Create New agent</a>
+            </div>
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border">ID</th>
+                        <th class="py-2 px-4 border">Username</th>
+                        <th class="py-2 px-4 border">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agent in agents %}
+                    <tr>
+                        <td class="py-2 px-4 border">{{ agent.id }}</td>
+                        <td class="py-2 px-4 border">{{ agent.user.username }}</td>
+                        <td class="py-2 px-4 border">
+                            <a href="#" class="text-green-500 hover:underline ml-2">Assign Agent</a>
+                        </td>
+                    </tr>
+                    {% endfor %} 
+                </tbody>
+            </table>
+        </div>
+        </div>
+ </div>
+
+{% endblock content %}
