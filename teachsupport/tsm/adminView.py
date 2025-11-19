@@ -3,37 +3,54 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from tsm.models import SupportTicket,TicketComment,UserRole
 from tsm.forms import CommentTicketForm
+from django.contrib.auth.decorators import login_required
+from .decorators import role_required
 
-def dashbaord(request):
-    count = { 
-        "users" : User.objects.count(),
-        "tickets" : SupportTicket.objects.count(),
-        "replay" : TicketComment.objects.count(),
-        "agents" : UserRole.objects.filter(role="staff").count(),
-        "resloved_tickets": SupportTicket.objects.filter(status="closed").count(),
+
+
+@login_required()
+@role_required(allowed_roles={"admin"})
+def dashboard(request):
+    count = {
+        "users": User.objects.count(),
+        "tickets": SupportTicket.objects.count(),
+        "replies": TicketComment.objects.count(),
+        "agents": UserRole.objects.filter(role="staff").count(),
+        "resolved_tickets": SupportTicket.objects.filter(status="closed").count(),
     }
     return render(request, 'admin/dashboard.html',{'count':count})
 
+
+@login_required()
+@role_required(allowed_roles={"admin"})
 def manage_users(request):
     data = {
         "users" : UserRole.objects.filter(role="user")
     }
     return render(request, 'admin/manageUsers.html',data)
 
+@login_required()
+@role_required(allowed_roles={"admin"})
 def manage_tickets(request):
     data = {
         "tickets" : SupportTicket.objects.all().order_by("-status")
     }
     return render(request, 'admin/manageTickets.html', data)
 
+@login_required()
+@role_required(allowed_roles={"admin"})
 def reports(request):
     return render(request, 'admin/report.html')
 
+
+@login_required()
+@role_required(allowed_roles={"admin"})
 def adminSettings(request):
     return render(request, 'admin/setting.html')
 
 
-
+@login_required()
+@role_required(allowed_roles={"admin"})
 def addAgent(req):
     form = UserCreationForm(req.POST or None)
     if req.method == "POST":
@@ -48,10 +65,14 @@ def addAgent(req):
             return redirect('manage_agents')
     return render(req, "admin/addAgent.html", {"form":form})
 
+@login_required()
+@role_required(allowed_roles={"admin"})
 def manageAgents(request):
     staffs = UserRole.objects.filter(role="staff")
     return render(request, 'admin/manageAgents.html',{"agents":staffs})
 
+@login_required()
+@role_required(allowed_roles={"admin"})
 def adminViewTicket(req,ticket_id):
     ticket = SupportTicket.objects.get(pk=ticket_id)
     replies = TicketComment.objects.filter(ticket=ticket_id)
@@ -72,6 +93,9 @@ def adminViewTicket(req,ticket_id):
             return redirect(adminViewTicket,ticket_id)
     return render(req, "admin/viewTicket.html",{"ticket":ticket, "replies":replies,"form":replayForm})
 
+
+@login_required()
+@role_required(allowed_roles={"admin"})
 def closeTicket(request, ticket_id):
     ticket = SupportTicket.objects.get(id=ticket_id)
     ticket.status = 'Closed'

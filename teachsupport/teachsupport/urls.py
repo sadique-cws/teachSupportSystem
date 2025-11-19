@@ -15,7 +15,7 @@ urlpatterns = [
     path("register/", register, name="register"),
 
     # admin urls
-    path("admin/", dashbaord, name="admin_dashboard"),
+    path("admin/", dashboard, name="admin_dashboard"),
     path("admin/manage_users/", manage_users, name="manage_users"),
     path("admin/manage_tickets/", manage_tickets, name="manage_tickets"),
     path("admin/reports/", reports, name="reports"),

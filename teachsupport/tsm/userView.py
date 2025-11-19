@@ -1,5 +1,10 @@
 from django.shortcuts import render,redirect
 from tsm.models import SupportTicket,TicketAttachment
+from django.contrib.auth.decorators import login_required
+from .decorators import role_required
+
+@login_required()
+@role_required(allowed_roles={"user"})
 def userDashboard(request):
     countTicket = {
         'openTicket': SupportTicket.objects.filter(status='open', created_by=request.user).count(),
@@ -8,6 +13,10 @@ def userDashboard(request):
     }
     return render(request, 'user/userdashboard.html', countTicket)
 
+
+
+@login_required()
+@role_required(allowed_roles={"user"})
 def raiseTicket(request):
     if request.method == "POST":
         title = request.POST.get('title')
@@ -35,6 +44,8 @@ def raiseTicket(request):
 
 
 
+@login_required()
+@role_required(allowed_roles={"user"})
 def viewTicket(request, ticket_id):
     ticket = SupportTicket.objects.get(id=ticket_id, created_by=request.user)
     attachments = TicketAttachment.objects.filter(ticket=ticket)

@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import authenticate,login as login_user, logout as logout_user
 from tsm.models import UserRole
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -28,6 +29,7 @@ def login(request):
     return render(request, 'login.html',{'form': form})
 
 
+@login_required()
 def logout(request):
     logout_user(request)
     return redirect('index')
