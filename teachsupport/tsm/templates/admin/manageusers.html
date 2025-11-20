@@ -1,36 +1,131 @@
 {% extends "admin/adminbase.html" %}
-
+{% load static %}
 
 {% block content %}
 
-<div class="flex flex-1">
-    <div class="w-2/12 bg-slate-700 h-screen pt-5">
-       {% include "admin/sidebar.html" %}
+<div class="flex min-h-screen bg-gray-50">
+    <!-- Fixed Minimal Sidebar -->
+    <div class="w-72 fixed inset-y-0 left-0 z-40">
+        {% include "admin/sidebar.html" %}
     </div>
-    <div class="w-10/12">
-        <div class="flex-1">
-        <div class="bg-white p-5 m-5 rounded-lg ">
-            <h2 class="text-2xl font-bold mb-5">Manage Users</h2>
-            <table class="min-w-full bg-white">
-                <thead>
-                    <tr>
-                        <th class="py-2 px-4 border-b">ID</th>
-                        <th class="py-2 px-4 border-b">Name</th>
-                        <th class="py-2 px-4 border-b">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                    <tr>
-                        <td class="py-2 px-4 border-b">{{ user.user.id }}</td>
-                        <td class="py-2 px-4 border-b">{{ user.user.username }}</td>
-                        <td class="py-2 px-4 border-b">{{ user.user.email }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+
+    <!-- Main Content -->
+    <div class="w-full p-6 lg:p-8">
+
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-2xl font-semibold text-gray-900">Manage Users</h1>
+            <p class="text-gray-600 mt-1">View and manage all registered users on the platform.</p>
         </div>
+
+        <!-- Search & Action Bar -->
+        <div class="mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between">
+            <div class="relative w-full sm:max-w-sm">
+                <input type="text" placeholder="Search by name or email..."
+                       class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition text-sm">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </div>
+            <button class="px-5 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Add New User
+            </button>
         </div>
- </div>
+
+        <!-- Users Table Card -->
+        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">ID</th>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">Avatar</th>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">Name</th>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">Email</th>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">Role</th>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">Status</th>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for user in users %}
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="py-3 px-5 text-primary-600 font-medium">#{{ user.user.id }}</td>
+                            <td class="py-3 px-5">
+                                <div class="w-9 h-9 rounded-lg bg-primary-600 flex items-center justify-center text-white font-medium text-sm">
+                                    {{ user.user.username|slice:":1"|upper }}
+                                </div>
+                            </td>
+                            <td class="py-3 px-5 font-medium text-gray-900">
+                                {{ user.user.get_full_name|default:user.user.username }}
+                            </td>
+                            <td class="py-3 px-5 text-gray-600">{{ user.user.email }}</td>
+                            <td class="py-3 px-5">
+                                {% if user.is_admin %}
+                                    <span class="px-2.5 py-1 bg-primary-100 text-primary-700 rounded text-xs font-medium">Admin</span>
+                                {% elif user.is_agent %}
+                                    <span class="px-2.5 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">Agent</span>
+                                {% else %}
+                                    <span class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">User</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3 px-5">
+                                {% if user.user.is_active %}
+                                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">Active</span>
+                                {% else %}
+                                    <span class="px-2.5 py-1 bg-red-100 text-red-700 rounded text-xs font-medium">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3 px-5">
+                                <div class="flex items-center gap-2">
+                                    <button class="p-1.5 hover:bg-gray-100 rounded transition" title="View">
+                                        <svg class="w-4 h-4 text-gray-500 hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="p-1.5 hover:bg-blue-50 rounded transition" title="Edit">
+                                        <svg class="w-4 h-4 text-gray-500 hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="p-1.5 hover:bg-red-50 rounded transition" title="Delete">
+                                        <svg class="w-4 h-4 text-gray-500 hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-16 text-gray-500">
+                                <div class="max-w-xs mx-auto">
+                                    <svg class="w-16 h-16 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                    </svg>
+                                    <p class="font-medium">No users found</p>
+                                    <p class="text-sm mt-1">Try adjusting your search or add a new user.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="px-5 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between text-sm text-gray-600">
+                <p>Showing {{ users|length }} user{{ users|length|pluralize }}</p>
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition text-sm font-medium">Previous</button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition text-sm font-medium">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock content %}

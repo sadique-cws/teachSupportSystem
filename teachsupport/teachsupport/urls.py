@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from tsm.adminView import *
 from tsm.userView import *
+from tsm.staffView import *
 
 
 urlpatterns = [
@@ -30,6 +31,10 @@ urlpatterns = [
     path("user/raise_ticket/", raiseTicket, name="raise_ticket"),
     path("user/view_ticket/<int:ticket_id>/", viewTicket, name="view_ticket"),
 
+    #staff urls
+    path("staff/dashboard/", staffDashboard, name="staff_dashboard"),
+    path("staff/manage_tickets/", staffmanageTicket, name="staff_manage_tickets"),
+    path("staff/view_ticket/<int:ticket_id>/", staffViewTicket, name="staffViewTicket"),
     # superadmin url
     path('superadmin/', admin.site.urls),
 ]

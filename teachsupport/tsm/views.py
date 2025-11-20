@@ -24,7 +24,7 @@ def login(request):
                 elif userRole.role == "admin":
                     return redirect("admin_dashboard") 
                 elif userRole.role == "staff":
-                    return redirect("index")
+                    return redirect("staff_dashboard")
 
     return render(request, 'login.html',{'form': form})
 

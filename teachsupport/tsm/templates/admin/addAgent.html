@@ -1,24 +1,68 @@
 {% extends "admin/adminbase.html" %}
-
-{% load tailwind_filters %}
+{% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
-    
-<div class="flex flex-1">
-    <div class="w-2/12 bg-slate-700 h-screen pt-5">
-       {% include "admin/sidebar.html" %}
-    </div>
-    <div class="w-10/12">
-    <div class="px-[10%] py-10">
-        <h2 class="text-3xl font-semibold mb-6">Create Agent Account</h2>
-        <p class="text-lg">to manage Ticket create staff</p>
-        <div class="mt-8 max-w-md">
-            <form method="post" class="bg-white p-6 rounded shadow-md">
-                {% csrf_token %}
 
-                {{ form|crispy }}
-                
-                <button type="submit" class="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700">Create</button>
-            </form>
+<div class="flex min-h-screen bg-gray-50">
+    <!-- Fixed Light Sidebar -->
+    <div class="w-72 fixed inset-y-0 left-0 z-40">
+        {% include "admin/sidebar.html" %}
     </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-8 lg:p-12">
+
+        <!-- Page Header -->
+        <div class="mb-12">
+            <h1 class="text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+                Create Agent Account
+            </h1>
+            <p class="text-gray-600 mt-4 text-lg">Add a new support agent to your team with full ticket management access.</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-primary-600 to-primary-400 px-8 py-6">
+                    <h2 class="text-2xl font-bold text-white">Agent Information</h2>
+                    <p class="text-purple-100 mt-1">Fill in the details below to create a new agent account</p>
+                </div>
+
+                <div class="p-8 lg:p-10">
+                    <form method="post" class="space-y-8">
+                        {% csrf_token %}
+
+                        <!-- Crispy Form Fields (assumes you have django-crispy-forms + Tailwind setup) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {{ form|crispy }}
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex items-center gap-4 pt-6 border-t border-gray-200">
+                            <button type="submit" 
+                                    class="px-10 py-4 bg-gradient-to-r from-primary-600 to-primary-400 text-white font-semibold rounded-2xl hover:shadow-xl hover:shadow-purple-500/25 transition transform hover:scale-105 flex items-center gap-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                Create Agent Account
+                            </button>
+                            <a href="{% url 'manage_agents' %}" 
+                               class="px-8 py-4 bg-gray-100 text-gray-700 font-medium rounded-2xl hover:bg-gray-200 transition">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Success / Help Message -->
+            <div class="mt-8 text-center">
+                <p class="text-sm text-gray-500">
+                    After creation, the agent will receive an email to set their password.
+                </p>
+            </div>
+        </div>
     </div>
-{% endblock %}
+</div>
+
+{% endblock content %}

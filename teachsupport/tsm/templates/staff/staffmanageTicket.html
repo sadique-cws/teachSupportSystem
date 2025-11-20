@@ -1,0 +1,47 @@
+{% extends "staff/staffbase.html" %}
+
+
+{% block content %}
+
+<div class="flex flex-1">
+    <div class="w-2/12 bg-slate-700 h-screen pt-5">
+       {% include "staff/staffpanelsidebar.html" %}
+    </div>
+    <div class="w-10/12">
+        <div class="flex-1">
+        <div class="bg-white p-5 m-5 rounded-lg ">
+            <div class="flex flex-1 justify-between items-center">
+                <h2 class="text-2xl font-bold mb-5">Manage Tickets</h2>
+            </div>
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border">ID</th>
+                        <th class="py-2 px-4 border">Title</th>
+                        <th class="py-2 px-4 border">Created By</th>
+                        <th class="py-2 px-4 border">status</th>
+                        <th class="py-2 px-4 border">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td class="py-2 px-4 border">{{ ticket.id }}</td>
+                        <td class="py-2 px-4 border">{{ ticket.title }}</td>
+                        <td class="py-2 px-4 border">{{ ticket.created_by }}</td>
+                        <td class="py-2 px-4 border">{{ ticket.status }}</td>
+                        <td class="py-2 px-4 border">
+                            <a href="{% url 'staffViewTicket' ticket.id%}" class="text-blue-500 hover:underline">View</a>
+                            {% if ticket.status != 'Closed'  %}
+                            <a href="{% url 'close_ticket' ticket.id %}" class="text-red-500 hover:underline ml-2">Close</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %} 
+                </tbody>
+            </table>
+        </div>
+        </div>
+ </div>
+
+{% endblock content %}

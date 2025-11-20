@@ -1,36 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel | TechSupport</title>
+    <title>TechSupport | Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f8f0fb',
+                            100: '#efd6f5',
+                            200: '#dfadeb',
+                            300: '#c87edb',
+                            400: '#ab52c6',
+                            500: '#8e44ad',
+                            600: '#783594',
+                            700: '#622b79',
+                            800: '#4b2160',
+                            900: '#3a1a4a',
+                        }
+                    },
+                },
+            },
+        }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body>
-    <!-- header -->
-     <div class="flex flex-1 bg-slate-700 text-white px-[10%] items-center py-3">
-        <h1 class="text-2xl font-bold">TechSupport | Admin Panel</h1>
 
-        <!-- links -->
-        <div class="ml-auto space-x-4">
-            <a href="" class="hover:underline">Home</a>
-            <a href="" class="hover:underline">About</a>
-            <a href="" class="hover:underline">Contact</a>
+<body class="min-h-screen bg-gray-50 text-gray-900 text-base leading-normal">
 
-            {% if request.user.is_authenticated %}
-                <a href="" class="hover:underline">Dashboard</a>
-                <form action="{% url 'logout' %}" href="" class="hover:underline inline">
-                    <button class="inline" type="submit">Logout</button>
+    <!-- Minimal Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                    TS
+                </div>
+                <div>
+                    <h1 class="text-xl font-semibold text-gray-900">TechSupport</h1>
+                    <p class="text-xs text-gray-500 -mt-0.5">Admin Panel</p>
+                </div>
+            </div>
+
+            <!-- Nav & Auth -->
+            <nav class="hidden md:flex items-center gap-6 text-sm">
+                {% if request.user.is_authenticated %}
+                <a href="#" class="text-gray-600 hover:text-primary-600 font-medium">Dashboard</a>
+                <form action="{% url 'logout' %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition">
+                        Logout
+                    </button>
                 </form>
-            {% else %}
-                <a href="{% url 'login' %}" class="hover:underline">Login</a>
-                <a href="{% url 'register' %}" class="hover:underline">Register</a>
-            {% endif %}
-     </div>
-</div>
+                {% else %}
+                <a href="{% url 'login' %}" class="text-gray-600 hover:text-primary-600 font-medium">Login</a>
+                <a href="{% url 'register' %}" class="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition">
+                    Register
+                </a>
+                {% endif %}
+            </nav>
 
+            <!-- Mobile Menu -->
+            <button class="md:hidden p-2">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+    </header>
 
-     {% block content %}
-     {% endblock %}
+    <!-- Main Content (with sidebar offset) -->
+    <main class="ml-72 min-h-screen bg-gray-50">
+        <div class="p-6">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Optional: Remove animated blobs entirely for minimal look -->
+    <!-- Or keep very subtle static ones if you want a tiny touch of color -->
+    <div class="fixed inset-0 -z-10 pointer-events-none">
+        <div class="absolute top-10 left-10 w-80 h-80 bg-primary-100 rounded-full blur-3xl opacity-30"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-primary-50 rounded-full blur-3xl opacity-20"></div>
+    </div>
+
 </body>
 </html>
