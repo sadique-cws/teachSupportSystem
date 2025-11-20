@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login as login_user, logout as logout_user
 from tsm.models import UserRole
+from .forms import RegisterForm
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -36,7 +37,7 @@ def logout(request):
 
 
 def register(request):
-    form = UserCreationForm(request.POST or None)
+    form = RegisterForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
             data = form.save()

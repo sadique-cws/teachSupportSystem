@@ -1,47 +1,118 @@
 {% extends "staff/staffbase.html" %}
-
+{% load static %}
 
 {% block content %}
 
-<div class="flex flex-1">
-    <div class="w-2/12 bg-slate-700 h-screen pt-5">
-       {% include "staff/staffpanelsidebar.html" %}
+<div class="flex min-h-screen bg-gray-50">
+    <!-- Fixed Minimal Sidebar -->
+    <div class="w-72 fixed inset-y-0 left-0 z-40">
+        {% include "staff/staffpanelsidebar.html" %}
     </div>
-    <div class="w-10/12">
-        <div class="flex-1">
-        <div class="bg-white p-5 m-5 rounded-lg ">
-            <div class="flex flex-1 justify-between items-center">
-                <h2 class="text-2xl font-bold mb-5">Manage Tickets</h2>
+
+    <!-- Main Content -->
+    <div class="ml-72 w-full p-6 lg:p-8">
+
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-2xl font-semibold text-gray-900">Manage Tickets</h1>
+            <p class="text-gray-600 mt-1">View and respond to tickets assigned to you.</p>
+        </div>
+
+        <!-- Tickets Table -->
+        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">ID</th>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">Title</th>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">Created By</th>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">Status</th>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">Last Updated</th>
+                            <th class="text-left py-3 px-5 font-medium text-gray-700">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for ticket in tickets %}
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="py-3 px-5 text-primary-600 font-medium">#{{ ticket.id }}</td>
+                            <td class="py-3 px-5 font-medium text-gray-900 max-w-md truncate">
+                                {{ ticket.title }}
+                            </td>
+                            <td class="py-3 px-5 text-gray-700">
+                                {{ ticket.created_by.get_full_name|default:ticket.created_by.username }}
+                            </td>
+                            <td class="py-3 px-5">
+                                {% if ticket.status == 'Open' %}
+                                    <span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">Open</span>
+                                {% elif ticket.status == 'In Progress' %}
+                                    <span class="px-2.5 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">In Progress</span>
+                                {% elif ticket.status == 'Closed' %}
+                                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">Closed</span>
+                                {% else %}
+                                    <span class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">{{ ticket.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3 px-5 text-gray-500 text-xs">
+                                {{ ticket.updated_at|timesince }} ago
+                            </td>
+                            <td class="py-3 px-5">
+                                <div class="flex items-center gap-3">
+                                    <a href="{% url 'staffViewTicket' ticket.id %}"
+                                       class="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                        View
+                                    </a>
+
+                                    {% if ticket.status != 'Closed' %}
+                                    <a href="{% url 'close_ticket' ticket.id %}"
+                                       class="text-red-600 hover:text-red-700 font-medium text-sm flex items-center gap-1"
+                                       onclick="return confirm('Close this ticket?')">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                        Close
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-16 text-gray-500">
+                                <div class="max-w-xs mx-auto">
+                                    <svg class="w-16 h-16 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                    </svg>
+                                    <p class="font-medium">No tickets assigned</p>
+                                    <p class="text-sm mt-1">You currently have no open tickets.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <table class="min-w-full bg-white">
-                <thead>
-                    <tr>
-                        <th class="py-2 px-4 border">ID</th>
-                        <th class="py-2 px-4 border">Title</th>
-                        <th class="py-2 px-4 border">Created By</th>
-                        <th class="py-2 px-4 border">status</th>
-                        <th class="py-2 px-4 border">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for ticket in tickets %}
-                    <tr>
-                        <td class="py-2 px-4 border">{{ ticket.id }}</td>
-                        <td class="py-2 px-4 border">{{ ticket.title }}</td>
-                        <td class="py-2 px-4 border">{{ ticket.created_by }}</td>
-                        <td class="py-2 px-4 border">{{ ticket.status }}</td>
-                        <td class="py-2 px-4 border">
-                            <a href="{% url 'staffViewTicket' ticket.id%}" class="text-blue-500 hover:underline">View</a>
-                            {% if ticket.status != 'Closed'  %}
-                            <a href="{% url 'close_ticket' ticket.id %}" class="text-red-500 hover:underline ml-2">Close</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %} 
-                </tbody>
-            </table>
+
+            <!-- Optional: Pagination (add when needed) -->
+            {% if tickets.has_other_pages %}
+            <div class="px-5 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between text-sm text-gray-600">
+                <p>Showing {{ tickets.start_index }}–{{ tickets.end_index }} of {{ tickets.paginator.count }}</p>
+                <div class="flex gap-2">
+                    {% if tickets.has_previous %}
+                        <a href="?page={{ tickets.previous_page_number }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition text-sm font-medium">Previous</a>
+                    {% endif %}
+                    {% if tickets.has_next %}
+                        <a href="?page={{ tickets.next_page_number }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition text-sm font-medium">Next</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
         </div>
-        </div>
- </div>
+
+    </div>
+</div>
 
 {% endblock content %}

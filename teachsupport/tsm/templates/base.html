@@ -1,36 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechSupport</title>
+    <title>TechSupport {% block title %}{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Brand Color: #00aeff -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0faff',
+                            100: '#e0f4ff',
+                            200: '#b8e9ff',
+                            300: '#75d7ff',
+                            400: '#00c2ff',
+                            500: '#00aeff',
+                            600: '#0098e6',
+                            700: '#0078b3',
+                            800: '#006391',
+                            900: '#004d70',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body>
-    <!-- header -->
-     <div class="flex flex-1 bg-rose-600 text-white px-[10%] items-center py-3">
-        <h1 class="text-2xl font-bold">TechSupport</h1>
 
-        <!-- links -->
-        <div class="ml-auto space-x-4">
-            <a href="" class="hover:underline">Home</a>
-            <a href="" class="hover:underline">About</a>
-            <a href="" class="hover:underline">Contact</a>
+<body class="min-h-screen bg-gray-50 text-gray-900">
 
-            {% if request.user.is_authenticated %}
-                <a href="{% url 'user_dashboard' %}" class="hover:underline">Dashboard</a>
-                <form action="{% url 'logout' %}" href="" class="hover:underline inline">
-                    <button class="inline" type="submit">Logout</button>
-                </form>
-            {% else %}
-                <a href="{% url 'login' %}" class="hover:underline">Login</a>
-                <a href="{% url 'register' %}" class="hover:underline">Register</a>
-            {% endif %}
-     </div>
-</div>
+    <!-- Clean Modern Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto">
 
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                    TS
+                </div>
+                <h1 class="text-2xl font-bold text-gray-900">TechSupport</h1>
+            </div>
 
-     {% block content %}
-     {% endblock %}
+            <!-- Navigation -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="{% url 'index' %}" class="text-gray-600 hover:text-primary-600 transition">Home</a>
+                <a href="" class="text-gray-600 hover:text-primary-600 transition">About</a>
+                <a href="" class="text-gray-600 hover:text-primary-600 transition">Contact</a>
+                <a href="" class="text-gray-600 hover:text-primary-600 transition">Submit Ticket</a>
+
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'user_dashboard' %}" class="text-gray-600 hover:text-primary-600 transition">My Tickets</a>
+                    <form action="{% url 'logout' %}" method="post" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="px-5 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition">
+                            Logout
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="text-gray-600 hover:text-primary-600 transition">Login</a>
+                    <a href="{% url 'register' %}" class="px-5 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition">
+                        Sign Up
+                    </a>
+                {% endif %}
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden p-2" onclick="toggleMobileMenu()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-6 py-4 space-y-3 text-sm font-medium">
+                <a href="{% url 'index' %}" class="block text-gray-600 hover:text-primary-600">Home</a>
+                <a href="" class="block text-gray-600 hover:text-primary-600">About</a>
+                <a href="" class="block text-gray-600 hover:text-primary-600">Contact</a>
+                <a href="" class="block text-gray-600 hover:text-primary-600">Submit Ticket</a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'user_dashboard' %}" class="block text-gray-600 hover:text-primary-600">My Tickets</a>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full text-left text-red-600 hover:text-red-700">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="block text-gray-600 hover:text-primary-600">Login</a>
+                    <a href="{% url 'register' %}" class="block text-primary-600 font-medium">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="min-h-screen">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Subtle Background Decoration -->
+    <div class="fixed inset-0 -z-10 pointer-events-none">
+        <div class="absolute top-20 left-10 w-96 h-96 bg-primary-100 rounded-full blur-3xl opacity-30"></div>
+        <div class="absolute bottom-20 right-10 w-80 h-80 bg-primary-50 rounded-full blur-3xl opacity-20"></div>
+    </div>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+    </script>
 </body>
 </html>

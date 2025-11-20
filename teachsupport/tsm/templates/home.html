@@ -1,23 +1,106 @@
 {% extends "base.html" %}
+{% load static %}
 
+{% block title %}– Home{% endblock %}
 
 {% block content %}
 
-{% load static %}
+<!-- Hero Banner -->
+<section class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-primary-50 py-24 px-6 lg:py-32">
+    <div class="max-w-7xl mx-auto">
 
-<!-- banner -->
-<div class="bg-rose-100 py-20 px-[10%] flex flex-col lg:flex-row lg:items-center lg:justify-between">
-    <div>
-        <h4 class="text-gray-800 mb-2 text-2xl font-bold capitalize text-rose-600">Hi, 
-            {% if request.user.is_authenticated %} {{ request.user.username }}! {% else %} Guest!{% endif %}
-        </h4>
-        <h2 class="text-4xl font-bold mb-4">Welcome to TechSupport</h2>
-        <p class="text-lg mb-6">Your one-stop solution for all your technical support needs. We provide expert assistance for hardware, software, and network issues.</p>
-        <a href="" class="bg-rose-600 text-white px-6 py-3 rounded hover:bg-rose-700">Get Started</a>
-    </div>
-    <div class="mt-8 lg:mt-0">
-        <img src="{% static 'banner.png' %}" alt="Tech Support">
-    </div>
-</div>
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            
+            <!-- Left: Text Content -->
+            <div class="space-y-2">
+                <div>
+                    <p class="text-primary-600 font-semibold text-lg">
+                        Hi{% if request.user.is_authenticated %}, <span class="capitalize">{{ request.user.get_full_name|default:request.user.username }}</span> {% else %}, Guest{% endif %}!
+                    </p>
+                    <h1 class="mt-3 text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                        Fast, Reliable<br>
+                        <span class="text-primary-600">Tech Support</span><br>
+                        When You Need It
+                    </h1>
+                </div>
 
-{% endblock %}
+                <p class="text-lg text-gray-600 leading-relaxed max-w-xl">
+                    Get instant help from our expert team for hardware, software, network issues, and more. 
+                    Submit a ticket and track progress in real time — 24/7 support, always here for you.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'user_dashboard' %}" 
+                           class="px-8 py-4 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition shadow-lg hover:shadow-xl">
+                            Go to My Tickets
+                        </a>
+                        <a href="" 
+                           class="px-8 py-4 border-2 border-primary-600 text-primary-600 font-medium rounded-lg hover:bg-primary-50 transition">
+                            Submit New Ticket
+                        </a>
+                    {% else %}
+                        <a href="" 
+                           class="px-8 py-4 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition shadow-lg hover:shadow-xl">
+                            Submit a Ticket
+                        </a>
+                        <a href="{% url 'login' %}" 
+                           class="px-8 py-4 border-2 border-primary-600 text-primary-600 font-medium rounded-lg hover:bg-primary-50 transition">
+                            Sign In
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center gap-8 pt-6 text-sm text-gray-600">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>24/7 Support</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Average reply < 2 hours</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Hero Image -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-primary-100 rounded-3xl blur-3xl opacity-60 -z-10 translate-x-10 translate-y-10"></div>
+                <img src="{% static 'banner.png' %}" 
+                     alt="TechSupport Hero" 
+                     class="w-full max-w-2xl mx-auto">
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Decorative Elements -->
+    <div class="absolute top-20 left-10 w-72 h-72 bg-primary-300 rounded-full blur-3xl opacity-20 -z-10"></div>
+    <div class="absolute bottom-10 right-20 w-96 h-96 bg-primary-200 rounded-full blur-3xl opacity-20 -z-10"></div>
+</section>
+
+<!-- Optional: Features Section (uncomment if needed) -->
+<!--
+<section class="py-20 px-6 bg-white">
+    <div class="max-w-7xl mx-auto text-center">
+        <h2 class="text-4xl font-bold text-gray-900 mb-12">Why Choose TechSupport?</h2>
+        <div class="grid md:grid-cols-3 gap-10">
+            <div class="p-8 bg-gray-50 rounded-2xl">
+                <div class="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-9 h-9 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Lightning Fast</h3>
+                <p class="text-gray-600">Most tickets resolved within hours</p>
+            </div>
+            → Add more cards
+        </div>
+    </div>
+</section>
+-->
+
+{% endblock content %}

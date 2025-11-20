@@ -1,75 +1,177 @@
 {% extends "staff/staffbase.html" %}
+{% load static %}
 
 {% block content %}
-    {% load tailwind_filters %}
-    <div class="flex flex-1">
-        <div class="w-2/12 bg-slate-700 h-screen pt-5">
-       {% include "staff/staffpanelsidebar.html" %}
+
+<div class="flex min-h-screen bg-gray-50">
+    <!-- Fixed Minimal Sidebar -->
+    <div class="w-72 fixed inset-y-0 left-0 z-40">
+        {% include "staff/staffpanelsidebar.html" %}
     </div>
-    <div class="w-10/12 bg-slate-100 p-5">
-        <h1 class="text-xl mb-4">view ticket Id <span class="text-4xl font-bold ">#T{{ticket.id}}</span></h1>
-        <div class="grid grid-cols-3">
-            <table class="table w-full border col-span-2">
-            <tr>
-                <th class="p-3 border">Subject</th>
-                <td class="p-3 border">{{ticket.title}}</td>
-            </tr>
-            <tr>
-                <th class="p-3 border">Message</th>
-                <td class="p-3 border">{{ticket.description}}</td>
-            </tr>
-            <tr>
-                <th class="p-3 border">Raised By</th>
-                <td class="p-3 border">{{ticket.created_by}}</td>
-            </tr>
-            <tr>
-                <th class="p-3 border">assigned To</th>
-                <td class="p-3 border">{{ticket.assigned_to}}</td>
-            </tr>
-            <tr>
-                <th class="p-3 border">Status</th>
-                <td class="p-3 border">{{ticket.status}}</td>
-            </tr>
-             <tr>
-                <th class="p-3 border">Creation Date</th>
-                <td class="p-3 border">{{ticket.created_at}}</td>
-            </tr>
-        </table>
+
+    <!-- Main Content -->
+    <div class="ml-72 p-6 lg:p-8 w-full mx-auto">
+
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-semibold text-gray-900">
+                <span class="ml-3 text-lg font-medium text-gray-500">{{ ticket.title }}</span>
+            </h1>
+            <div class="flex items-center gap-4 mt-3">
+                <span class="{% if ticket.status == 'Open' %}bg-yellow-100 text-yellow-700
+                             {% elif ticket.status == 'In Progress' %}bg-blue-100 text-blue-700
+                             {% elif ticket.status == 'Closed' %}bg-green-100 text-green-700
+                             {% else %}bg-gray-100 text-gray-700{% endif %}
+                             px-3 py-1 rounded-full text-sm font-medium">
+                    {{ ticket.status }}
+                </span>
+                <span class="text-sm text-gray-500">
+                    Created {{ ticket.created_at|timesince }} ago by {{ ticket.created_by.get_full_name|default:ticket.created_by.username }}
+                </span>
+            </div>
         </div>
 
-        <div class="flex flex-1 flex-col">
-            <h2 class="my-5 text-3xl text-gray-400">Ticket Response</h2>
-            <!-- all replays -->
-             {% if replies|length %}
-            <table class="w-full border">
-                {% for reply in replies %}
-                    <tr>
-                    <td class="p-3 border">
-                        <h5>Replay By: {{reply.author}}</h5>
-                        <small>Date: {{reply.created_at}}</small>
-                    </td>
-                    <td class="p-3 border">
-                        {{reply.comment}}
-                    </td>
-                </tr>
-                {% endfor %}
-             </table>
-             {% else %}
-                    <h1 class="text-3xl text-slate-300 mt-5">Be the first Replay Now</h1>
-                   
-             {% endif %}
+        <div class="grid lg:grid-cols-3 gap-8">
 
-              {% if ticket.status != "Closed" %}
-                    <form action="" method="post" class="mt-4">
-                        {% csrf_token %}
-                        {{form|crispy}}
-                        <div class="mb-3">
-                            <button type="submit" class="bg-primary-600 text-white px-3 py-2 rounded hover:bg-primary-700 self-end">Replay</button>
+            <!-- Left Column: Ticket Details -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- Ticket Info Card -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-5 flex items-center gap-3">
+                        <div class="w-1.5 h-6 bg-primary-600 rounded-full"></div>
+                        Ticket Details
+                    </h2>
+
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between py-3 border-b border-gray-100">
+                            <span class="text-gray-600 font-medium">Subject</span>
+                            <span class="text-gray-900">{{ ticket.title }}</span>
                         </div>
-                    </form>
+                        <div class="flex justify-between py-3 border-b border-gray-100">
+                            <span class="text-gray-600 font-medium">Message</span>
+                            <div class="text-gray-900 max-w-md text-right">
+                                {{ ticket.description|linebreaks }}
+                            </div>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-gray-100">
+                            <span class="text-gray-600 font-medium">Raised By</span>
+                            <span class="text-gray-900">{{ ticket.created_by.get_full_name|default:ticket.created_by.username }}</span>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-gray-100">
+                            <span class="text-gray-600 font-medium">Assigned To</span>
+                            <span class="text-gray-900 font-medium">
+                                {% if ticket.assigned_to %}
+                                    {{ ticket.assigned_to.get_full_name|default:ticket.assigned_to.username }}
+                                {% else %}
+                                    <span class="text-gray-500 italic">Unassigned</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="flex justify-between py-3">
+                            <span class="text-gray-600 font-medium">Created</span>
+                            <span class="text-gray-900">{{ ticket.created_at|date:"M d, Y \a\t P" }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conversation -->
+                <div class="bg-white border border-gray-200 rounded-lg">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-3">
+                            <div class="w-1.5 h-6 bg-primary-600 rounded-full"></div>
+                            Conversation
+                        </h2>
+                    </div>
+
+                    <div class="p-6 space-y-6 max-h-96 overflow-y-auto">
+                        {% if replies %}
+                            {% for reply in replies %}
+                            <div class="flex gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-primary-600 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                                    {{ reply.author.username|slice:":1"|upper }}
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-1">
+                                        <span class="font-medium text-gray-900">
+                                            {{ reply.author.get_full_name|default:reply.author.username }}
+                                        </span>
+                                        <span class="text-xs text-gray-500">
+                                            {{ reply.created_at|timesince }} ago
+                                        </span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed">{{ reply.comment|linebreaks }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-12 text-gray-500">
+                                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                                <p class="font-medium">No replies yet</p>
+                                <p class="text-sm mt-1">Be the first to respond to this ticket.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Reply Form -->
+                    {% if ticket.status != "Closed" %}
+                    <div class="p-6 border-t border-gray-200 bg-gray-50">
+                        <form action="" method="post" class="space-y-4">
+                            {% csrf_token %}
+                            <div>
+                                <label for="id_comment" class="block text-sm font-medium text-gray-700 mb-2">Your Reply</label>
+                                {{ form.comment }}
+                                {% if form.comment.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ form.comment.errors }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <a href="{% url 'staff_manage_tickets' %}" class="text-sm text-gray-600 hover:text-gray-900">
+                                    ← Back to tickets
+                                </a>
+                                <button type="submit"
+                                        class="px-5 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition">
+                                    Send Reply
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    {% else %}
+                    <div class="p-6 border-t border-gray-200 bg-gray-50 text-center">
+                        <p class="text-gray-600 font-medium">This ticket is closed. No further replies allowed.</p>
+                    </div>
                     {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Sidebar: Quick Actions -->
+            <div class="space-y-6">
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        {% if ticket.status != "Closed" %}
+                        <a href="{% url 'close_ticket' ticket.id %}"
+                           onclick="return confirm('Are you sure you want to close this ticket?')"
+                           class="block w-full text-center px-4 py-2.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition">
+                            Close Ticket
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'staff_manage_tickets' %}"
+                           class="block w-full text-center px-4 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
+                            All Tickets
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wider mb-3">Ticket ID</h3>
+                    <p class="text-2xl font-bold text-primary-600">#{{ ticket.id }}</p>
+                </div>
+            </div>
         </div>
     </div>
-    </div>
+</div>
 
 {% endblock content %}
